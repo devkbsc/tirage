@@ -1,0 +1,3 @@
+{{ $tirage->name }}
+
+{{ $tirage->email }}
