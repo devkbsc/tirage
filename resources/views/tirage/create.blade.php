@@ -12,11 +12,9 @@
         <div class="row">
             <div class="col-lg-12 margin-tb">
                 <div class="pull-left mb-2">
-                    <h2>Participation Tirage</h2>
+                    <h2 class="text-center">Participation Tirage</h2>
                 </div>
-                <div class="pull-right">
-                    <a class="btn btn-primary" href="{{ route('tirage.index') }}"> Back</a>
-                </div>
+                <div class="pull-right"></div>
             </div>
         </div>
         @if(session('status'))
@@ -24,6 +22,13 @@
             {{ session('status') }}
         </div>
         @endif
+
+        @if (session('danger'))
+            <div class="alert alert-danger">
+                {{ session('danger') }}
+            </div>
+        @endif
+
         <form action="{{ route('tirage.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
             <div class="row">

@@ -4,59 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Tirage;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class TirageController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        $tirages = Tirage::orderBy('id','desc')->paginate(5);
-
-        return view('tirage.index', compact('tirages'));
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        return view('tirage.create');
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        $request->validate([
-            'name' => 'required',
-            'email' => 'required',
-        ]);
-        
-        Tirage::create($request->post());
-
-        return redirect()->route('tirage.show')->with('success','you have won a __________.');
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Tirage  $tirage
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Tirage $tirage)
-    {
-        return view('tirage.show', compact('tirage'));
-    }
 
     /**
      * Show the form for editing the specified resource.
@@ -66,7 +17,7 @@ class TirageController extends Controller
      */
     public function edit(Tirage $tirage)
     {
-        return view('tirage.edit',compact('tirage'));
+        return view('tirage.edit', compact('tirage'));
     }
 
     /**
@@ -82,10 +33,10 @@ class TirageController extends Controller
             'name' => 'required',
             'email' => 'required',
         ]);
-        
+
         $tirage->fill($request->post())->save();
 
-        return redirect()->route('tirage.index')->with('success','This is the prize gained by this winner');
+        return redirect()->route('tirage.index')->with('success', 'This is the prize gained by this winner');
     }
 
     /**
@@ -97,6 +48,120 @@ class TirageController extends Controller
     public function destroy(Tirage $tirage)
     {
         $tirage->delete();
-        return redirect()->route('tirage.index')->with('success','Tirage is removed from the list');
+        return redirect()->route('tirage.index')->with('success', 'Tirage is removed from the list');
+    }
+
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
+    {
+        $tirages = Tirage::orderBy('id', 'asc')->paginate(10);
+
+        return view('tirage.index', compact('tirages'));
+    }
+
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
+        return view('tirage.create');
+    }
+
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
+        
+        $prize = $this->getPrize();
+        $rules = [
+            'name' => 'required',
+            'email' => 'required|email|unique:users,email',
+        ];
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->fails()) {
+            // Redirect back with error messages and old input
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+        // if($validator->fails()){
+        //     return redirect()->route('tirage.create')->with('danger', 'Email already existed');
+        // }else{
+        // }
+        $tirage = new Tirage();
+        $tirage->name = $request->input('name');
+        $tirage->email = $request->input('email');
+        $tirage->prize = $prize;
+        $tirage->save();
+        $tirageid = $tirage->id;
+        return redirect()->route('tirage.show', $tirageid)->with('success', 'you have won a ' . $prize);
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  \App\Models\Tirage  $tirage
+     * @return \Illuminate\Http\Response
+     */
+    public function show(Tirage $tirage)
+    {
+        $prize = $this->getPrize();
+        return view('tirage.show', compact('tirage'));
+    }
+
+    public function getPrize()
+    {
+        $prize = " ";
+        $number = $this->shuffleNumber();
+
+        if ($number <= 1) {
+            $prize = "tesla";
+        } elseif ($number >= 2 && $number <= 10) {
+            $prize = "weekend_montagne";
+        } elseif ($number >= 11 && $number <= 20) {
+            $prize = "ps5";
+        } elseif ($number >= 21 && $number <= 30) {
+            $prize = "pc_gamer";
+        } else {
+            $prize = "card_game";
+        }
+
+        return $prize;
+    }
+
+    public function shuffleNumber()
+    {
+        $randomNumber = 0;
+
+        $probability = rand(1, 100); // Generate a random number to determine the probability
+
+        if ($probability <= 1) {
+            $randomNumber = rand(0, 1);
+        } elseif ($probability >= 2 && $probability <= 9) {
+            $randomNumber = rand(2, 10);
+        } elseif ($probability >= 11 && $probability <= 20) {
+            $randomNumber = rand(11, 20);
+        } elseif ($probability >= 21 && $probability <= 30) {
+            $randomNumber = rand(21, 30);
+        } elseif ($probability >= 31 && $probability <= 50) {
+            $randomNumber = rand(31, 50);
+        } else {
+            $randomNumber = rand(51, 100);
+        }
+
+        return $randomNumber;
     }
 }

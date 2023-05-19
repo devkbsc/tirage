@@ -9,5 +9,5 @@ class Tirage extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'email'];
+    protected $fillable = ['name', 'email', 'prize'];
 }

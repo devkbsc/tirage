@@ -32,9 +32,13 @@
                 </tr>
             </thead>
             <tbody>
+                @php
+                    $counter = 1;
+                @endphp
+
                 @foreach ($tirages as $tirage)
                     <tr>
-                        <td>{{ $tirage->id }}</td>
+                        <td>{{ $counter++ }}</td>
                         <td>{{ $tirage->name }}</td>
                         <td>{{ $tirage->email }}</td>
                         <td>
