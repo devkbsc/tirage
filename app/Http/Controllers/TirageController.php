@@ -102,10 +102,6 @@ class TirageController extends Controller
             return redirect()->back()->withErrors($validator)->withInput();
         }
 
-        // if($validator->fails()){
-        //     return redirect()->route('tirage.create')->with('danger', 'Email already existed');
-        // }else{
-        // }
         $tirage = new Tirage();
         $tirage->name = $request->input('name');
         $tirage->email = $request->input('email');
@@ -138,7 +134,7 @@ class TirageController extends Controller
             $prize = "weekend_montagne";
         } elseif ($number >= 11 && $number <= 20) {
             $prize = "ps5";
-        } elseif ($number >= 21 && $number <= 30) {
+        } elseif ($number >= 21 && $number <= 50) {
             $prize = "pc_gamer";
         } else {
             $prize = "card_game";
@@ -155,14 +151,15 @@ class TirageController extends Controller
 
         if ($probability <= 1) {
             $randomNumber = rand(0, 1);
-        } elseif ($probability >= 2 && $probability <= 9) {
+
+        } elseif ($probability >= 2 && $probability <= 10) {
             $randomNumber = rand(2, 10);
+
         } elseif ($probability >= 11 && $probability <= 20) {
             $randomNumber = rand(11, 20);
-        } elseif ($probability >= 21 && $probability <= 30) {
-            $randomNumber = rand(21, 30);
-        } elseif ($probability >= 31 && $probability <= 50) {
-            $randomNumber = rand(31, 50);
+
+        } elseif ($probability >= 21 && $probability <= 50) {
+            $randomNumber = rand(21, 50);
         } else {
             $randomNumber = rand(51, 100);
         }
