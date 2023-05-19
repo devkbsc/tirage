@@ -36,6 +36,10 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+
 Route::resource('tirage', TirageController::class);
+
+// Authenticated route (with authentication middleware)
+Route::get('/tirage', [TirageController::class, 'index'])->middleware('auth')->name('tirage.index');
 
 require __DIR__ . '/auth.php';

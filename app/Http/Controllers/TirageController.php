@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Tirage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class TirageController extends Controller
 {
@@ -88,7 +89,11 @@ class TirageController extends Controller
         $prize = $this->getPrize();
         $rules = [
             'name' => 'required',
-            'email' => 'required|email|unique:users,email',
+            'email' => [
+                'required',
+                'email',
+                Rule::unique('tirages', 'email')
+            ]
         ];
         $validator = Validator::make($request->all(), $rules);
 
