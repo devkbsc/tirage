@@ -126,7 +126,8 @@ class TirageController extends Controller
     public function getPrize()
     {
         $prize = " ";
-        $number = $this->shuffleNumber();
+        //$number = $this->shuffleNumber();
+        $number = rand(1,100);
 
         if ($number <= 1) {
             $prize = "tesla";
@@ -143,27 +144,5 @@ class TirageController extends Controller
         return $prize;
     }
 
-    public function shuffleNumber()
-    {
-        $randomNumber = 0;
-
-        $probability = rand(1, 100); // Generate a random number to determine the probability
-
-        if ($probability <= 1) {
-            $randomNumber = rand(0, 1);
-
-        } elseif ($probability >= 2 && $probability <= 10) {
-            $randomNumber = rand(2, 10);
-
-        } elseif ($probability >= 11 && $probability <= 20) {
-            $randomNumber = rand(11, 20);
-
-        } elseif ($probability >= 21 && $probability <= 50) {
-            $randomNumber = rand(21, 50);
-        } else {
-            $randomNumber = rand(51, 100);
-        }
-
-        return $randomNumber;
-    }
+    
 }
